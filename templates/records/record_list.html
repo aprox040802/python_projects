@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Records - Record Management{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Product List</span>
+        <a href="{% url 'record_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Add New Product
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-bordered table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 5%">S#</th>
+                    <th style="width: 15%">Code</th>
+                    <th>Name</th>
+                    <th style="width: 10%">Quantity</th>
+                    <th style="width: 12%">Price</th>
+                    <th style="width: 22%">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>COD{{ record.id|stringformat:"07d" }}</td>
+                    <td>{{ record.name }}</td>
+                    <td>{{ record.quantity }}</td>
+                    <td><span class="currency-symbol">$</span>{{ record.price|floatformat:2 }}</td>
+                    <td>
+                        <a href="#" class="btn btn-warning btn-sm me-1"><i class="bi bi-eye"></i> Show</a>
+                        <a href="{% url 'record_update' record.id %}" class="btn btn-primary btn-sm me-1"><i class="bi bi-pencil"></i> Edit</a>
+                        <a href="{% url 'record_delete' record.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No records found. Add your first product!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <div class="text-muted small">
+            Showing {{ records.start_index }} to {{ records.end_index }} of {{ records.paginator.count }} results
+        </div>
+        {% if is_paginated %}
+        <nav>
+            <ul class="pagination mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

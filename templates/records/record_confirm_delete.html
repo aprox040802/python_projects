@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Record - Record Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                </div>
+                <h2 class="card-title mb-4">Delete Record</h2>
+                
+                <div class="alert alert-warning mb-4">
+                    <p class="lead mb-0">Are you sure you want to delete the record "{{ object.name }}"?</p>
+                </div>
+                
+                <div class="record-details mb-4">
+                    <p class="mb-2"><strong>Price:</strong> ${{ object.price }}</p>
+                    <p class="mb-2"><strong>Quantity:</strong> {{ object.quantity }} units</p>
+                    <p class="mb-0"><strong>Added:</strong> {{ object.date_of_entry }}</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'record_list' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
